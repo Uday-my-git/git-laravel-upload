@@ -21,59 +21,68 @@
          <div class="col-md-9">
             <div class="card">
                   <div class="card-header">
-                     <h2 class="h5 mb-0 pt-2 pb-2">My Orders</h2>
+                     <h2 class="h5 mb-0 pt-2 pb-2">My Wishlist</h2>
                   </div>
                   <div class="card-body p-4">
-                     <div class="d-sm-flex justify-content-between mt-lg-4 mb-4 pb-3 pb-sm-2 border-bottom">
-                        <div class="d-block d-sm-flex align-items-start text-center text-sm-start"><a class="d-block flex-shrink-0 mx-auto me-sm-4" href="#" style="width: 10rem;"><img src="images/product-1.jpg" alt="Product"></a>
-                              <div class="pt-2">
-                                 <h3 class="product-title fs-base mb-2"><a href="shop-single-v1.html">TH Jeans City Backpack</a></h3>                                        
-                                 <div class="fs-lg text-accent pt-2">$79.<small>50</small></div>
-                              </div>
-                        </div>
-                        <div class="pt-2 ps-sm-3 mx-auto mx-sm-0 text-center">
-                              <button class="btn btn-outline-danger btn-sm" type="button"><i class="fas fa-trash-alt me-2"></i>Remove</button>
-                        </div>
-                     </div>  
-                     <div class="d-sm-flex justify-content-between mt-lg-4 mb-4 pb-3 pb-sm-2 border-bottom">
-                        <div class="d-block d-sm-flex align-items-start text-center text-sm-start"><a class="d-block flex-shrink-0 mx-auto me-sm-4" href="#" style="width: 10rem;"><img src="images/product-1.jpg" alt="Product"></a>
-                              <div class="pt-2">
-                                 <h3 class="product-title fs-base mb-2"><a href="shop-single-v1.html">TH Jeans City Backpack</a></h3>                                        
-                                 <div class="fs-lg text-accent pt-2">$79.<small>50</small></div>
-                              </div>
-                        </div>
-                        <div class="pt-2 ps-sm-3 mx-auto mx-sm-0 text-center">
-                              <button class="btn btn-outline-danger btn-sm" type="button"><i class="fas fa-trash-alt me-2"></i>Remove</button>
-                        </div>
-                     </div>  
-                     
-                     <div class="d-sm-flex justify-content-between mt-lg-4 mb-4 pb-3 pb-sm-2 border-bottom">
-                        <div class="d-block d-sm-flex align-items-start text-center text-sm-start"><a class="d-block flex-shrink-0 mx-auto me-sm-4" href="#" style="width: 10rem;"><img src="images/product-1.jpg" alt="Product"></a>
-                              <div class="pt-2">
-                                 <h3 class="product-title fs-base mb-2"><a href="shop-single-v1.html">TH Jeans City Backpack</a></h3>                                        
-                                 <div class="fs-lg text-accent pt-2">$79.<small>50</small></div>
-                              </div>
-                        </div>
-                        <div class="pt-2 ps-sm-3 mx-auto mx-sm-0 text-center">
-                              <button class="btn btn-outline-danger btn-sm" type="button"><i class="fas fa-trash-alt me-2"></i>Remove</button>
-                        </div>
-                     </div>  
+                     @if ($wishlist->isNotEmpty())
+                        @foreach ($wishlist as $wishlistItem)
+                           <div class="d-sm-flex justify-content-between mt-lg-4 mb-4 pb-3 pb-sm-2 border-bottom">
+                              <div class="d-block d-sm-flex align-items-start text-center text-sm-start">
+                                 @php
+                                    $productImg = getProductImg($wishlistItem->product_id);
+                                 @endphp
 
-                     <div class="d-sm-flex justify-content-between mt-lg-4 mb-4 pb-3 pb-sm-2 border-bottom">
-                        <div class="d-block d-sm-flex align-items-start text-center text-sm-start"><a class="d-block flex-shrink-0 mx-auto me-sm-4" href="#" style="width: 10rem;"><img src="images/product-1.jpg" alt="Product"></a>
-                              <div class="pt-2">
-                                 <h3 class="product-title fs-base mb-2"><a href="shop-single-v1.html">TH Jeans City Backpack</a></h3>                                        
-                                 <div class="fs-lg text-accent pt-2">$79.<small>50</small></div>
+                                 @if (!empty($productImg))
+                                    <a href="{{ route('front.product', $wishlistItem->product->slug) }}" class="d-block flex-shrink-0 mx-auto me-sm-4" style="width: 10rem;"><img src="{{ asset('/uploads/product/large/' . $productImg->image) }}" alt="Product"></a>
+                                 @else
+                                    <a href="#" class="d-block flex-shrink-0 mx-auto me-sm-4" style="width: 10rem;"><img src="{{ asset('/uploads/dummy-img.jpg') }}" alt="Product"></a>  
+                                 @endif
+                                 
+                                 <div class="pt-2">
+                                    <h3 class="product-title fs-base mb-2">
+                                       <a href="{{ route('front.product', $wishlistItem->product->slug) }}">{{ $wishlistItem->product->title }}</a>
+                                    </h3>                                        
+                                    <div class="fs-lg text-accent pt-2">${{ number_format($wishlistItem->product->price) }}</div>
+                                 </div>
                               </div>
-                        </div>
-                        <div class="pt-2 ps-sm-3 mx-auto mx-sm-0 text-center">
-                              <button class="btn btn-outline-danger btn-sm" type="button"><i class="fas fa-trash-alt me-2"></i>Remove</button>
-                        </div>
-                     </div>  
+                              <div class="pt-2 ps-sm-3 mx-auto mx-sm-0 text-center">
+                                 <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeWishlistFun('{{ $wishlistItem->product_id }}')">
+                                    <i class="fas fa-trash-alt me-2"></i>   
+                                    Remove
+                                 </button>
+                              </div>
+                           </div>   
+                        @endforeach    
+                     @endif
+                     
                   </div>
             </div>
          </div>
       </div>
    </div>
 </section>
+@endsection
+
+@section('custom-js')
+<script>
+
+function removeWishlistFun(product_id)
+{
+   if (confirm('Aru u sure to delete product')) {
+      $.ajax({
+         type: "POST",
+         url: "{{ route('account.removeWishlist') }}",
+         data: {product_id:product_id},
+         dataType: "JSON",
+         success: function (response) {
+            if (response.status === true) {
+               window.location.href = '{{ route("account.wishlist") }}';
+            }
+         }
+      });
+   }
+  
+}
+
+</script>
 @endsection

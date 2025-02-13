@@ -35,18 +35,24 @@
                            <div class="col-6 col-lg-3">
                               <h6 class="heading-xxxs text-muted">Shipped date:</h6>
                               <p class="mb-lg-0 fs-sm fw-bold">
-                                 <time datetime="2019-10-01"> 01 Oct, 2019 </time>
+                                 @if (!empty($orders->shipped_date))
+                                    <time datetime="2019-10-01"> {{ \Carbon\Carbon::parse($orders->shipped_date)->format('d M, Y') }} </time>
+                                 @else
+                                    n/a
+                                 @endif
                               </p>
                            </div>
                            <div class="col-6 col-lg-3">
                               <h6 class="heading-xxxs text-muted">Status:</h6>
                               <p class="mb-0 fs-sm fw-bold"> 
                                  @if ($orders->status == 'pending')
-                                    <span class="badge bg-danger">Pending</span>
+                                    <span class="badge bg-warning">Pending</span>
                                  @elseif ($orders->status == 'shipped')
                                     <span class="badge bg-info">Shipped</span>
-                                 @else
+                                 @elseif ($orders->status == 'delivered')
                                     <span class="badge bg-success">Delivered</span>
+                                 @else
+                                    <span class="badge bg-danger">Cancelled</span>
                                  @endif   
                               </p>
                            </div>
@@ -60,7 +66,7 @@
                </div>
                <div class="card-footer p-3">
                   <!-- Heading -->
-                  <h6 class="mb-7 h5 mt-4">Order Items (3)</h6>
+                  <h6 class="mb-7 h5 mt-4">Order Items ({{$orderItemCount}})</h6>
                   <!-- Divider -->
                   <hr class="my-3">
                   <!-- List group -->

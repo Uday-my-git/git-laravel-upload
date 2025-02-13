@@ -53,7 +53,7 @@ class ShopController extends Controller
             }
         }
 
-        if ($request->get('sort') != '') {                                        // price sorting filtering                           
+        if ($request->get('sort') != '') {                    // price sorting filtering                           
             if ($request->get('sort') == 'latest') {
                 $products = $products->orderBy('id', 'desc');
 

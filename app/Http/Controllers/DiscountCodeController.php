@@ -100,7 +100,7 @@ class DiscountCodeController extends Controller
 
     public function update(Request $request, $id)
     {
-        $data = DiscountCoupon::find($id);    // discount coupon code update
+        $data = DiscountCoupon::find($id);
 
         if (is_null($data)) {
             session()->flash('errors', 'Records not found');

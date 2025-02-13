@@ -5,7 +5,6 @@
    <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="false">
       <div class="carousel-inner">
          <div class="carousel-item active">
-            <!-- <img src="images/carousel-1.jpg" class="d-block w-100" alt=""> -->
             <picture>
                <source media="(max-width: 799px)" srcset="{{ asset('front-assets/images/carousel-1-m.jpg') }}" />
                <source media="(min-width: 800px)" srcset="{{ asset('front-assets/images/carousel-1.jpg') }}" />
@@ -142,7 +141,7 @@
                            @endif
                         </a>
                       
-                        <a class="whishlist" href="222">
+                        <a href="javascript:void(0)" class="whishlist" onclick="addToWishlist({{ $featuredProduct->id }})">
                            <i class="far fa-heart"></i>
                         </a>
                         <div class="product-action">
@@ -194,7 +193,7 @@
                               <img class="card-img-top" src="{{ asset('front-assets/images/product-1.jpg') }}" alt="">
                            </a>
                         @endif
-                        <a class="whishlist" href="222">
+                        <a href="javascript:void(0)" class="whishlist" onclick="addToWishlist({{ $featuredProduct->id }})">
                            <i class="far fa-heart"></i>
                         </a>
                         <div class="product-action">
@@ -207,10 +206,10 @@
                         <a class="h6 link" href="product.php">{{ $latestProduct->title }}</a>
                         <div class="price mt-2">
                            <span class="h5">
-                              <strong>$100</strong>
+                              <strong>${{ $latestProduct->price }}</strong>
                            </span>
                            <span class="h6 text-underline">
-                              <del>$120</del>
+                              <del>${{ $latestProduct->compare_price }}</del>
                            </span>
                         </div>
                      </div>

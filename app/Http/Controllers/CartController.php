@@ -148,6 +148,7 @@ class CartController extends Controller
         if (!empty($customerAddress)) {    // calculate shipping charges according country
             $userCountry = $customerAddress->country_id;     
             $shippingCharges = Shipping::where('country_id', $userCountry)->first();
+            // dd($shippingCharges);
     
             $totalQty = 0;
             $grandTotal = 0;
@@ -346,12 +347,13 @@ class CartController extends Controller
                     $orderItem->total = $item->price * $item->qty;
                     $orderItem->save();
                 }
+
+                orderEmail($order->id, 'customer');
             } else {
                 # stripe payment method
             }
 
             Cart::destroy();
-
             session()->forget('coupon_code');
             session()->flash('success', 'You have successfully placed your order');
             return response()->json(['status' => true, 'orderId' => $order->id, 'msg' => 'shipping address inserted successful']);

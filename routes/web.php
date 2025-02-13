@@ -11,6 +11,7 @@ use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ProductImageController;
 use App\Http\Controllers\admin\ProductSubCategoryController;
 use App\Http\Controllers\admin\ShippingController;
+use App\Http\Controllers\admin\OrderController;
 
 // front end of prodcut listing
 use App\Http\Controllers\AuthController;
@@ -20,11 +21,15 @@ use App\Http\Controllers\ShopController;
 
 // front end of Add to Cart Prodcut
 use App\Http\Controllers\CartController;
-
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
+// Route::get('/emailTest', function () {
+//     orderEmail(37);
+// });
+
 Route::get('/', [FrontController::class, 'index'])->name('front.home');
+Route::post('/add-to-wishlist', [FrontController::class, 'addToWishlist'])->name('front.addToWishlist');
 
 Route::get('/shop/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
 Route::get('/product/{slug}', [ShopController::class, 'product'])->name('front.product');
@@ -48,13 +53,15 @@ Route::group(['prefix' => 'account'], function () {
         Route::get('/login', [AuthController::class, 'login'])->name('account.login');
         Route::post('/login-authenticate', [AuthController::class, 'authenticate'])->name('account.authenticate');
         Route::post('/save-register-form', [AuthController::class, 'saveRegisterForm'])->name('account.saveRegisterForm');
+        
     });
 
     Route::group(['middleware' => 'auth'], function () {
         Route::get('/profile', [AuthController::class, 'profile'])->name('account.profile');
         Route::get('/my-orders', [AuthController::class, 'orders'])->name('account.orders');
         Route::get('/order-detail/{orderId}', [AuthController::class, 'get_orderDetail'])->name('account.get_orderDetail');
-        Route::get('/my-wishlist', [AuthController::class, 'wishlist'])->name('account.wishlist');
+        Route::get('/wishlist', [AuthController::class, 'wishlist'])->name('account.wishlist');
+        Route::post('/remove-wishlist', [AuthController::class, 'removeWishlist'])->name('account.removeWishlist');
         Route::get('/logout', [AuthController::class, 'logout'])->name('account.logout');
 
     });
@@ -128,6 +135,12 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('coupons/edit/{id}', [DiscountCodeController::class, 'edit'])->name('coupons.edit');
         Route::put('coupons/update/{id}', [DiscountCodeController::class, 'update'])->name('coupons.update');
         Route::delete('coupons/delete/{id}', [DiscountCodeController::class, 'destroy'])->name('coupons.destroy');
+
+        // Order routes
+        Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+        Route::get('orders-details/{orderId}', [OrderController::class, 'getOrderDetail'])->name('orders.getOrderDetail');
+        Route::post('change-orderStatus/{statusId}', [OrderController::class, 'changeOrderStatus'])->name('orders.changeOrderStatus');
+        Route::post('send-email-invoice/{orderId}', [OrderController::class, 'sendInvoiceEmail'])->name('orders.sendInvoiceEmail');
         
         // temp-images route define
         Route::post('/upload-temp-images', [TempImagesController::class, 'create'])->name('temp-images.create');

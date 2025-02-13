@@ -51,7 +51,6 @@
                         <input type="text" name="max_uses" id="max_uses" class="form-control" placeholder="Max Uses">	
                      </div>
                   </div>
-                
                   <div class="col-md-6">
                      <div class="mb-3">
                         <label for="max_uses">Type</label>
