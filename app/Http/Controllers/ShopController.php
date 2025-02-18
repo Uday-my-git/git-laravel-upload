@@ -53,6 +53,10 @@ class ShopController extends Controller
             }
         }
 
+        if (!empty($request->get('search'))) {                        // product search on home page 
+            $products = $products->where('title', 'like', '%'. $request->get('search') .'%' );
+        }
+
         if ($request->get('sort') != '') {                    // price sorting filtering                           
             if ($request->get('sort') == 'latest') {
                 $products = $products->orderBy('id', 'desc');
@@ -84,23 +88,20 @@ class ShopController extends Controller
 
     public function product($slug)
     {
-        $product = Product::where('slug', $slug)->with('productImage')->first();
+        $product = Product::where('slug', $slug)->with('productImage')->firstOrFail();
 
-        if (is_null($product)) {
-            abort(404);
-        }
-        
-        $relatedProducts = '';
+        $relatedProducts = '';         // Default empty collection
+        // $relatedProducts = collect();         // Default empty collection
 
-        if ($product->related_products != '') {
+        if (!empty($product->related_products)) {
             $productArr = explode(',', $product->related_products);
-            $relatedProducts = Product::whereIn('id', $productArr)->get();
+            $relatedProducts = Product::whereIn('id', $productArr)->where('status', 1)->get();
         }
 
-        $data['product'] = $product;
-        $data['relatedProducts'] = $relatedProducts;
-        
-        return view('front.product', $data);
+        return view('front.product', [
+            'product' => $product,
+            'relatedProducts' => $relatedProducts
+        ]);
     }
 
    

@@ -16,7 +16,6 @@
 
 <body class="hold-transition login-page">
    <div class="login-box">
-      <!-- /.login-logo -->
       @include('admin.message')
 
       <div class="card card-outline card-primary">

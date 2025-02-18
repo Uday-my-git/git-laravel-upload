@@ -84,7 +84,7 @@
                         </div>
                         <div class="col-md-12">
                            <div class="mb-3">
-                              <label for="compare_price">Compare at Price</label>
+                              <label for="compare_price">Compare At Price</label>
                               <input type="text" name="compare_price" id="compare_price" class="form-control" placeholder="Compare Price">
                               <p class="text-muted mt-3"> To show a reduced price, move the product’s original price into Compare at price. Enter a lower value into Price. </p>
                            </div>
@@ -200,7 +200,7 @@
                      <div class="mb-3">
                         <select name="is_featured" id="is_featured" class="form-control">
                            {{-- <option>Select Featured Product</option> --}}
-                           <option value="No">No</option>
+                           <option value="No">No (Default)</option>
                            <option value="Yes">Yes</option>
                         </select>
                         <p class="error"></p>
@@ -315,6 +315,8 @@ $(function () {
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }, 
       success: function(file, response){
+         // console.log(response);
+         
          var html = `<div class="col-md-3" id="img-row-id-${response.img_id}">
             <div class="card">
                <img src="${response.img_path}" class="card-img-top" height="150" width="100" alt="...">

@@ -58,12 +58,12 @@
                <a href="{{ route('account.login') }}" class="nav-link text-dark">Login/Register</a>
             @endif   
             
-            <form action="">
+            <form action="{{ route('front.shop') }}" name="search" method="GET">
                <div class="input-group">
-                  <input type="text" placeholder="Search For Products" class="form-control" aria-label="Amount (to the nearest dollar)">
-                  <span class="input-group-text">
+                  <input type="text" name="search" placeholder="Search For Products" value="{{ Request::get('search') }}" id="search" class="form-control" aria-label="Amount (to the nearest dollar)">
+                  <button type="submit" class="input-group-text">
                      <i class="fa fa-search"></i>
-                  </span>
+                  </button>
                </div>
             </form>
          </div>
@@ -87,11 +87,10 @@
                   @foreach (getCategoriesFun() as $category)
                      <li class="nav-item dropdown">
                         <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> {{ $category->name }} </button>
-                        
                         <ul class="dropdown-menu dropdown-menu-dark">
                            @if ($category->sub_category->isNotEmpty())
                               @foreach ($category->sub_category as $subCategory)
-                                 <li><a class="dropdown-item nav-link" href="{{ route('front.shop') }}">{{ $subCategory->name }}</a></li>
+                                 <li><a class="dropdown-item nav-link" href="3">{{ $subCategory->name }}</a></li>
                               @endforeach
                            @endif                          
                         </ul>

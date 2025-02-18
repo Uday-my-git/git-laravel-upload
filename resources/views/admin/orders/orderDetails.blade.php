@@ -181,7 +181,7 @@ $(function () {
          $.ajax({
             type: "POST",
             url: "{{ route('orders.sendInvoiceEmail', $order->id) }}",
-            data: $("send-email-invoice").serializeArray(),
+            data: $("#send-email-invoice").serializeArray(),
             dataType: "JSON",
             success: function (response) {
                if (response.status === true) {  

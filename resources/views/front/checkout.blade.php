@@ -172,7 +172,7 @@
                      </div>
                   </div>                        
                   <div class="pt-4">
-                     <button type="submit" class="btn-dark btn btn-block w-100">Pay Now</button>
+                     <button type="submit" class="btn-dark btn btn-block w-100" id="paynow-btn">Pay Now</button>
                   </div>
                </div>
             </div>
@@ -201,7 +201,9 @@ $(function () {
 
    $("#order-formId").submit(function (e) { 
       e.preventDefault();
+
       $("button[type='submit']").prop('disabled', true);
+      $('#paynow-btn').text('Please Wait....');
 
       $.ajax({
          type: "POST",

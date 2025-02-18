@@ -8,7 +8,7 @@
 </head>
 <body>
 
-   @if ($mailData['userTypte'] == 'customer')
+   @if ($mailData['userType'] == 'customer')
       <h1>Thanks for your orders!!</h1>
       <h2>your Order Id Is: #{{ $mailData['order']->id }}</h2>
    @else

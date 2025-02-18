@@ -40,13 +40,20 @@ class CategorieController extends Controller
         ]);
 
         if ($validator->passes()) {
-            $category = new Category();
+            $category = Category::create([            // Type 1
+                'name' => $request->name,
+                'slug' => $request->slug,
+                'status' => $request->status,
+                'showHome' => $request->showHome,
+            ]);
 
-            $category->name = $request->name;
-            $category->slug = $request->slug;
-            $category->status = $request->status;
-            $category->showHome = $request->showHome;
-            $category->save();
+            // $category = new Category();           // Type 2
+
+            // $category->name = $request->name;
+            // $category->slug = $request->slug;
+            // $category->status = $request->status;
+            // $category->showHome = $request->showHome;
+            // $category->save();
 
             if (!empty($request->image_id)) {
                 $tempImg = TempImage::find($request->image_id);
@@ -54,6 +61,7 @@ class CategorieController extends Controller
                 $lastExtension = last($extensionArr);
 
                 $newImg = $category->id . '.' . $lastExtension;
+                  
                 $sourcePath = public_path('/temp-img/') . $tempImg->name; 
                 $destinationPath = public_path('/uploads/category/') . $newImg; 
                 
@@ -71,7 +79,9 @@ class CategorieController extends Controller
                 $img->save($newDestinationPath);
 
                 $category->image = $newImg;
-                $category->save();
+                $category->update();     // Type 1
+
+                // $category->save();    // Type 2
             }
 
             $request->session()->flash('success', 'Category addedd succesffully');
@@ -99,7 +109,7 @@ class CategorieController extends Controller
         $category = Category::where('id', $id)->first();
 
         if (empty($category->id)) {
-            $request->session()->flash('error', 'This Categor Not Exists For Update Data');
+            $request->session()->flash('error', 'This Categor Not Exists For Updateing Data');
             return response()->json(['status' => true, 'notFound' => true, 'msg' => 'This Categor Not Exists For Update User Data']);
         }
         
@@ -115,7 +125,7 @@ class CategorieController extends Controller
             $category->showHome = $request->showHome;
             $category->save();
 
-            // Check if either file exists and delete them
+            // Check if file exists and delete them
             $thumbPath = public_path('uploads/thumb/') . $category->image;
             $mainPath = public_path('uploads/category/') . $category->image;
         
@@ -166,7 +176,7 @@ class CategorieController extends Controller
             $mainPath = public_path() . '/uploads/thumb/' . $category->image;
             $thumbPath = public_path() . '/uploads/category/' . $category->image; 
 
-            if (File::exists($mainPath) || File::exists($mainPath))
+            if (File::exists($mainPath) || File::exists($thumbPath))
                 File::delete([$mainPath, $thumbPath]);
         }
 

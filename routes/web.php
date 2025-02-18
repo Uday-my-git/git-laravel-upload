@@ -12,6 +12,7 @@ use App\Http\Controllers\admin\ProductImageController;
 use App\Http\Controllers\admin\ProductSubCategoryController;
 use App\Http\Controllers\admin\ShippingController;
 use App\Http\Controllers\admin\OrderController;
+use App\Http\Controllers\admin\UserController;
 
 // front end of prodcut listing
 use App\Http\Controllers\AuthController;
@@ -25,8 +26,10 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 // Route::get('/emailTest', function () {
-//     orderEmail(37);
+//     orderEmail(132);
 // });
+
+/********************************* Add To Wishlist *********************************/ 
 
 Route::get('/', [FrontController::class, 'index'])->name('front.home');
 Route::post('/add-to-wishlist', [FrontController::class, 'addToWishlist'])->name('front.addToWishlist');
@@ -34,7 +37,8 @@ Route::post('/add-to-wishlist', [FrontController::class, 'addToWishlist'])->name
 Route::get('/shop/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
 Route::get('/product/{slug}', [ShopController::class, 'product'])->name('front.product');
 
-// Add to Cart Prodcut
+/**************************** Add to Cart Prodcut Front End Side ****************************/
+
 Route::get('/cart', [CartController::class, 'cart'])->name('front.cart');
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('front.addToCart');
 Route::post('/update-cart', [CartController::class, 'updateCart'])->name('front.updateCart');
@@ -46,7 +50,8 @@ Route::post('/apply-discount-coupon', [CartController::class, 'applyCouponCode']
 Route::post('/remove-discount-coupon', [CartController::class, 'removeCouponCode'])->name('front.removeCouponCode');
 Route::get('/thank-you-page/{orderId}', [CartController::class, 'thankyouPage'])->name('front.thankyouPage');
 
-// front-end user login & signup 
+/**************************** Rront-end User Login & Signup ****************************/ 
+
 Route::group(['prefix' => 'account'], function () { 
     Route::group(['middleware' => 'guest'], function () {
         Route::get('/register', [AuthController::class, 'register'])->name('account.register');
@@ -58,6 +63,8 @@ Route::group(['prefix' => 'account'], function () {
 
     Route::group(['middleware' => 'auth'], function () {
         Route::get('/profile', [AuthController::class, 'profile'])->name('account.profile');
+        Route::post('/update-profile', [AuthController::class, 'updateProfile'])->name('account.updateProfile');
+        Route::post('/update-address', [AuthController::class, 'updateAddress'])->name('account.updateAddress');
         Route::get('/my-orders', [AuthController::class, 'orders'])->name('account.orders');
         Route::get('/order-detail/{orderId}', [AuthController::class, 'get_orderDetail'])->name('account.get_orderDetail');
         Route::get('/wishlist', [AuthController::class, 'wishlist'])->name('account.wishlist');
@@ -67,7 +74,7 @@ Route::group(['prefix' => 'account'], function () {
     });
 });
 
-//  Admin route
+/**************************** Admin Route Define ****************************/
 
 Route::group(['prefix' => 'admin'], function() {
     Route::group(['middleware' => 'admin.guest'], function() {
@@ -79,7 +86,7 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
         Route::get('/logout', [HomeController::class, 'logout'])->name('admin.logout');
 
-        // Categories route define
+        /**************************** Categories Route Define ****************************/
         Route::get('/categories', [CategorieController::class, 'index'])->name('categories.index');
         Route::get('/categories/create', [CategorieController::class, 'create'])->name('categories.create');
         Route::post('/categories', [CategorieController::class, 'store'])->name('categories.store');
@@ -89,7 +96,7 @@ Route::group(['prefix' => 'admin'], function() {
         Route::put('/categories/{id}', [CategorieController::class, 'update'])->name('categories.update');
         Route::delete('/categories/{id}', [CategorieController::class, 'destroy'])->name('categories.delete');
         
-        // Sub Categories route define
+        /****************************  Sub Categories Route Define ****************************/
         Route::get('/sub-categories', [SubCategoryController::class, 'index'])->name('sub-category.index');
         Route::get('/sub-categories/create', [SubCategoryController::class, 'create'])->name('sub_categories.create');
         Route::post('/sub-categories/store', [SubCategoryController::class, 'store'])->name('sub_categories.store');
@@ -97,7 +104,7 @@ Route::group(['prefix' => 'admin'], function() {
         Route::put('/sub-categories/{id}', [SubCategoryController::class, 'update'])->name('sub_categories.update');
         Route::delete('/sub-categories/{id}', [SubCategoryController::class, 'destroy'])->name('sub_categories.delete');
 
-        // Barnd route define
+        /**************************** Barnd Route Define ****************************/
         Route::get('/brands/list', [BarndController::class, 'index'])->name('brands.brandListing');
         Route::get('/brands/create', [BarndController::class, 'create'])->name('brands.create');
         Route::post('/brands/save', [BarndController::class, 'store'])->name('brands.save');
@@ -105,7 +112,7 @@ Route::group(['prefix' => 'admin'], function() {
         Route::put('/brands/{id}', [BarndController::class, 'update'])->name('brands.update');
         Route::delete('/brands/{id}', [BarndController::class, 'destroy'])->name('brands.delete');
 
-        // Product route define
+        /**************************** Product Route Define ****************************/
         Route::get('/product/list', [ProductController::class, 'index'])->name('product.productListing');
         Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
         Route::post('/product/save', [ProductController::class, 'store'])->name('product.save');
@@ -114,21 +121,21 @@ Route::group(['prefix' => 'admin'], function() {
         Route::delete('/product/{id}', [ProductController::class, 'deleteProduct'])->name('product.delete');
         Route::get('/product/getProducts', [ProductController::class, 'getRelatedProducts'])->name('product.getRelatedProducts');
         
-        // Product SubCategory route define
+        /**************************** Product SubCategory Route Define ****************************/
         Route::get('/product-subCategory', [ProductSubCategoryController::class, 'index'])->name('product.subCategory');
         
         // Product image update route define
         Route::post('/product-image/update', [ProductImageController::class, 'update'])->name('product-image.update');
         Route::delete('/product-image/{id}', [ProductImageController::class, 'deleteProductImage'])->name('product-image.delete');
 
-        // Shipping route
+        /**************************** Shipping Route Define ****************************/
         Route::get('/shipping', [ShippingController::class, 'create'])->name('shipping.create');
-        Route::post('/store/{id}', [ShippingController::class, 'store'])->name('shipping.store');
+        Route::post('/store', [ShippingController::class, 'store'])->name('shipping.store');
         Route::get('/edit/{id}', [ShippingController::class, 'edit'])->name('shipping.edit');
         Route::put('/update/{id}', [ShippingController::class, 'update'])->name('shipping.update');
         Route::delete('/delete/{id}', [ShippingController::class, 'destroy'])->name('shipping.destroy');
 
-        // Dsicount coupon code route
+        /**************************** Dsicount coupon code route ****************************/
         Route::get('coupons/listing', [DiscountCodeController::class, 'index'])->name('coupons.list');
         Route::get('coupons/create', [DiscountCodeController::class, 'create'])->name('coupons.create');
         Route::post('coupons/store', [DiscountCodeController::class, 'store'])->name('coupons.store');
@@ -136,13 +143,21 @@ Route::group(['prefix' => 'admin'], function() {
         Route::put('coupons/update/{id}', [DiscountCodeController::class, 'update'])->name('coupons.update');
         Route::delete('coupons/delete/{id}', [DiscountCodeController::class, 'destroy'])->name('coupons.destroy');
 
-        // Order routes
+        /**************************** Order Routes ****************************/
         Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
         Route::get('orders-details/{orderId}', [OrderController::class, 'getOrderDetail'])->name('orders.getOrderDetail');
         Route::post('change-orderStatus/{statusId}', [OrderController::class, 'changeOrderStatus'])->name('orders.changeOrderStatus');
         Route::post('send-email-invoice/{orderId}', [OrderController::class, 'sendInvoiceEmail'])->name('orders.sendInvoiceEmail');
         
-        // temp-images route define
+        /**************************** User Route Define  ****************************/
+        Route::get('index', [UserController::class, 'index'])->name('user.index');
+        Route::get('create', [UserController::class, 'create'])->name('user.userCreate');
+        Route::post('save', [UserController::class, 'save'])->name('user.save');
+        Route::get('user-edit/{id}', [UserController::class, 'edit'])->name('user.userEdit');
+        Route::put('user-update/{id}', [UserController::class, 'update'])->name('user.userupdate');
+        Route::delete('user-delete/{id}', [UserController::class, 'remove'])->name('user.remove');
+
+        /**************************** Temp-images Route Define ****************************/
         Route::post('/upload-temp-images', [TempImagesController::class, 'create'])->name('temp-images.create');
 
         Route::get('/getSlug', function(Request $request) {      // type 1 generate slug

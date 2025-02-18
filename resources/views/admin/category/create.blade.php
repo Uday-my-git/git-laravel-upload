@@ -164,8 +164,8 @@ $(document).ready(function() {
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }, 
       success: function(file, response){
-         $("#image_id").val(response.img_id);
          // console.log(response)
+         $("#image_id").val(response.img_id);
       }
    });
    

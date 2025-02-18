@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class SubCategoryModel extends Model
 {
     use HasFactory;
+    
     public $table = "sub_categorys";
 }

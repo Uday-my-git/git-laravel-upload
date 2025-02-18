@@ -19,9 +19,9 @@ class ProductController extends Controller
 {
     public function index(Request $request) 
     {
-        $product = Product::latest('title')->with('productImage')
-                    ->select('products.*', 'categories.name as categoryName')
-                    ->join('categories', 'products.category_id', '=', 'categories.id');
+        $product = Product::latest()->with('productImage')
+                        ->select('products.*', 'categories.name as categoryName')
+                        ->join('categories', 'products.category_id', '=', 'categories.id');
 
         if (!empty($request->get("search"))) {
             $product = $product->where('title', 'like', '%' . $request->get("search") . '%');
@@ -29,7 +29,7 @@ class ProductController extends Controller
 
         $product = $product->paginate(10);
         $data["products"] = $product;
-
+        
         return view('admin.products.productListing', $data);
     }
 
@@ -68,7 +68,7 @@ class ProductController extends Controller
             $product = new Product;
 
             $product->title = $request->title;
-            $product->slug = $request->slug;
+            $product->slug  = $request->slug;
             $product->short_description = $request->short_description;
             $product->description = $request->description;
             $product->shipping_returns = $request->shipping_returns;
@@ -143,24 +143,25 @@ class ProductController extends Controller
         }
 
         // fetch related products
-        if ($product->related_products != '') {
+        if ($product->related_products !== '') {
             // DB::enableQueryLog();          // genereate mysql query
             $productArr = explode(',', $product->related_products);
             $relatedProducts = Product::whereIn('id', $productArr)->with('productImage')->get();
             // dd(DB::getQueryLog());         // genereate mysql query
         }
+
         $data['relatedProducts'] = $relatedProducts;
       
         $getproductImg = ProductImage::where('product_id', $product->id)->get();
         $data["getproductImg"] = $getproductImg;
        
-        $category = Category::latest('name')->get();
+        $category = Category::orderBy('name', 'asc')->get();
         $data["category"] = $category;
         
         $subCategory = SubCategoryModel::where('category_id', $product->category_id)->get();
         $data["subCategory"] = $subCategory;
         
-        $brands = Brand::latest('name')->get();
+        $brands = Brand::latest()->get();
         $data["brands"] = $brands;
         
         return view('admin.products.edit', $data);
@@ -208,41 +209,6 @@ class ProductController extends Controller
             $product->related_products = (!empty($request->related_products)) ? implode(',', $request->related_products) : '';
             
             $product->save();
-
-            // save gallery image
-            // if (!empty($request->imge_array)) {
-            //     foreach ($request->imge_array as $temp_img_id) {
-            //         $tempImgInfo = TempImage::find($temp_img_id);
-
-            //         $extensionArr = explode(".", $tempImgInfo->name);
-            //         $extension = last($extensionArr);
-
-            //         $productImg = new ProductImage();
-            //         $productImg->product_id = $product->id;
-            //         $productImg->image = "NULL";
-            //         $productImg->save();
-
-            //         $imgName = $product->id . "-" . $productImg->id . "-" . time() . "." . $extension;
-            //         $productImg->image = $imgName;
-            //         $productImg->save();
-                    
-            //         // Save Resized Image & Large Image
-            //         $sourcePath = public_path() . "/temp-img/" . $tempImgInfo->name;
-            //         $destinationPath = public_path() . "/uploads/product/large/" . $imgName;
-
-            //         $image = Image::make($sourcePath);
-
-            //         $image->resize(1400, null, function ($constraint) {
-            //             $constraint->aspectRatio();
-            //         });
-
-            //         $image->save($destinationPath);
-
-            //         // small image
-            //         $destinationPath = public_path() . "/uploads/product/small/" . $imgName;
-            //         $image = Image::make($sourcePath)->fit(300, 300)->save($destinationPath);
-            //     }
-            // }
             
             $request->session()->flash('success', 'Product Updated Successfully');
             return response()->json(['status' => true, 'msg' => 'Product Updated Successfully']);
@@ -280,7 +246,7 @@ class ProductController extends Controller
     {
         $tempProduct = [];
 
-        if ($request->term != '') {
+        if ($request->filled('term')) {    // filled method Ensures the value exists and is not null or an empty string Not check 0
             $products = Product::where('title', 'like', '%'. $request->term .'%')->get();
             
             if (!is_null($products)) {

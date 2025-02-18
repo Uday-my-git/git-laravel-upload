@@ -1,4 +1,6 @@
-@extends('admin.layouts.app') @section('content') <section class="content-header">
+@extends('admin.layouts.app') 
+@section('content') 
+<section class="content-header">
    <div class="container-fluid my-2">
       <div class="row mb-2">
          <div class="col-sm-6">
@@ -301,10 +303,10 @@ $(function() {
             data: {category_id: categoryId},
             dataType: "JSON",
             success: function (response) {
-               if (response.status === true) {
+               if (response.status === true) {                  
                   $("#sub_category").html('<option value="">Select Sub-Category</option>');
 
-                  $.each(response.msg, function (key, value) {  
+                  $.each(response.msg, function (key, value) {                       
                      $("#sub_category").append(`<option value="${value.id}">${value.name}</option>`);
                   });
                }

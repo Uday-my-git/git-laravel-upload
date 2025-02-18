@@ -9,7 +9,7 @@ use Image;
 
 class TempImagesController extends Controller
 {
-    public function create(Request $request)
+    public function create(Request $request) 
     {
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -25,9 +25,7 @@ class TempImagesController extends Controller
             $sourcePath = public_path() . '/temp-img/' . $newName;
             $destinationPath = public_path() . '/temp-img/thumb/' . $newName;
 
-            $image = Image::make($sourcePath);
-            $image->fit(300, 275);
-            $image->save($destinationPath);
+            $image = Image::make($sourcePath)->fit(300, 275)->save($destinationPath);
 
             return response()->json(['status' => true, 'img_id' => $tempImg->id, 'img_path' => asset('/temp-img/thumb/' . $newName), 'msg' => 'image uploaded successfully']);
         }

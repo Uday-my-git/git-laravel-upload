@@ -13,6 +13,7 @@ use App\Models\OrderItem;
 use App\Models\Shipping;
 use App\Models\CustomerAddress;
 use Carbon\Carbon;
+use DB;
 
 class CartController extends Controller
 {
@@ -119,7 +120,7 @@ class CartController extends Controller
             return redirect()->route('front.cart');
         }
 
-        if (Auth::check() == false) {                   // if user nor login, redirect login page
+        if (Auth::check() == false) {                   // if user not login, redirect login page
             if (!session()->has('url.intended')) {      // capture current URL
                 session(['url.intended' => url()->current()]);
             }
@@ -141,14 +142,13 @@ class CartController extends Controller
         
         $countreisFetch = Country::orderBy('name', 'asc')->get();
         $customerAddress = CustomerAddress::where('user_id', Auth::user()->id)->first(); 
-
         $data['countreisFetch'] = $countreisFetch;
         $data['customerAddress'] = $customerAddress;
-
-        if (!empty($customerAddress)) {    // calculate shipping charges according country
+        // dd($userCountry);
+        
+        if ($customerAddress != '') {    // calculate shipping charges according country
             $userCountry = $customerAddress->country_id;     
             $shippingCharges = Shipping::where('country_id', $userCountry)->first();
-            // dd($shippingCharges);
     
             $totalQty = 0;
             $grandTotal = 0;
@@ -164,7 +164,7 @@ class CartController extends Controller
             $data['totalShippingCharges'] = $totalShippingCharges;
             $data['grandTotal'] = $grandTotal;
         } else {
-            $grandTotal = ($subTotal - $discountCoupon);
+            $grandTotal = $subTotal - $discountCoupon;
             $data['grandTotal'] = $grandTotal;
             
             $totalShippingCharges = 0;
@@ -210,7 +210,7 @@ class CartController extends Controller
                 $data['couponHtml'] = $couponHtml;
             }
             
-            if ($shipping !== null) {
+            if ($shipping != null) {
                 $shippingCharge = $totalQty * $shipping->amount;                
                 $grandTotal = $shippingCharge + ($subTotal - $discountCoupon);
 
@@ -218,6 +218,7 @@ class CartController extends Controller
                 $data['grandTotal'] = number_format($grandTotal, 2);
             } else {
                 $shipping = Shipping::where('country_id', 'rest_of_world')->first();
+                // dd($shipping);
 
                 $shippingCharge = $totalQty * $shipping->amount;
                 $grandTotal = $shippingCharge + ($subTotal - $discountCoupon);
@@ -336,7 +337,8 @@ class CartController extends Controller
                 $order->notes       = $request->notes;
                 $order->save();
 
-                foreach (Cart::content() as $item) {                // save order in order_item table
+                 
+                foreach (Cart::content() as $item) {                // save orders in order_item table
                     $orderItem = new OrderItem;
                     $orderItem->product_id = $item->id;
                     $orderItem->order_id = $order->id;
@@ -346,8 +348,17 @@ class CartController extends Controller
                     $orderItem->price = $item->price;
                     $orderItem->total = $item->price * $item->qty;
                     $orderItem->save();
-                }
 
+                    $productData = Product::find($item->id);
+
+                    if ($productData->track_qty == 'Yes') {   // check track quantity remain in product
+                        $currentQty = $productData->qty;
+                        $updateQty = $currentQty - $item->qty;
+                        $productData->qty = $updateQty;
+                        $productData->save();
+                    }
+                }
+            
                 orderEmail($order->id, 'customer');
             } else {
                 # stripe payment method
@@ -411,7 +422,7 @@ class CartController extends Controller
         }
 
         session()->put('coupon_code', $couponCode);
-        return $this->getOrderSummery($request);
+        return $this->getOrderSummery($request);   
     }
 
     public function removeCouponCode(Request $request)

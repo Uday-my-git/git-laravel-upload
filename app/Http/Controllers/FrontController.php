@@ -22,9 +22,9 @@ class FrontController extends Controller
 
     public function addToWishlist(Request $request)
     {
-        if (Auth::check() == false) {
+        if (Auth::check() == false) {                           // if user login then add wishlist product
             session(['url.intended' => url()->previous()]);     // capture current URL if user login and redirect to checkout page
-            return response()->json(['status' => false, 'msg' => 'error login']);
+            return response()->json(['status' => false, 'msg' => 'login first then add to wishlist product']);
         }
 
         $product = Product::where('id', $request->productId)->first();

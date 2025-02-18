@@ -128,7 +128,7 @@ $(document).ready(function() {
       
       $.ajax({
          type: "POST",
-         url: "{{ route('shipping.store', $shippingItem->id) }}",
+         url: "{{ route('shipping.store') }}",
          data: data,
          dataType: "JSON",
          success: function (response) {

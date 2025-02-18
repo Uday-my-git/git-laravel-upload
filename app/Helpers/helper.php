@@ -20,11 +20,11 @@ function getProductImg($product_id)
 
 // send email to admin
 
-function orderEmail($orderId, $userTypte = 'customer')
+function orderEmail($orderId, $userType = 'customer')
 {
    $order = Order::where('id', $orderId)->with('emailItems')->first();
 
-   if ($userTypte == 'customer') {
+   if ($userType == 'customer') {
       $subject = 'Thanks for your order booking';
       $email = $order->email;
    } else {
@@ -35,7 +35,7 @@ function orderEmail($orderId, $userTypte = 'customer')
    $mailData = [
       'subject' => 'Thanks for your orders',
       'order' => $order,
-      'userTypte' => $userTypte
+      'userType' => $userType
    ];
    
    Mail::to($email)->send(new orderEmail($mailData));

@@ -63,12 +63,12 @@
                            <td>{{ $productList->id }}</td>
                            <td>
                               @if (!empty($productImage->image))
-                                 <img src="{{ asset('uploads/product/small/'.$productImage->image) }}" class="img-thumbnail" width="50" >
+                                 <img src="{{ asset('uploads/product/small/'.$productImage->image) }}" class="img-thumbnail">
                               @else 
-                                 <img src="{{ asset('uploads/dummy-img.jpg') }}" class="img-thumbnail" width="50" >
+                                 <img src="{{ asset('uploads/dummy-img.jpg') }}" class="img-thumbnail">
                               @endif
                            </td>
-                           <td><a href="javascript:void(0)">{{ $productList->title }}</td></a>
+                           <td>{{ $productList->title }}</td>
                            <td>{{ $productList->slug }}</td>
                            <td style="color: rgb(137, 137, 226)">{{ $productList->is_featured }}</td>
                            <td>{{ $productList->price }}</td>

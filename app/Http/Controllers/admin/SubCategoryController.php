@@ -116,14 +116,7 @@ class SubCategoryController extends Controller
             $request->session()->flash('success', 'SubCategory Does Not Exists');
             return response()->json(['status' => false, 'msg' => 'Brands Does Not Exists']);
         }
-        // if (isset($subCategory->image)) {
-        //     $sourcePath = public_path() . 'uploads/thumb/' . $subCategory->image;
-        //     $destinationPath = public_path() . 'uploads/category/' . $subCategory->image;
-
-        //     if (File::exists($sourcePath) || File::exists($destinationPath)) {
-        //         File::delete([$sourcePath, $destinationPath]);
-        //     }
-        // }
+        
         $subCategory->delete();
         $request->session()->flash('success', 'Subcategory deleted successfully');
         return response()->json(['status' => true, 'msg' => 'Subcategory deleted successfully']);

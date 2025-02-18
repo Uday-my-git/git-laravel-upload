@@ -39,7 +39,7 @@
                            @foreach ($orders as $orderItem)
                               <tr>
                                  <td>
-                                    <a href="{{ route('account.get_orderDetail', $orderItem->id) }}">{{ $orderItem->id }}</a>
+                                    <a href="{{ route('account.get_orderDetail', $orderItem->id) }}"><button class="btn btn-primary btn-sm" style="color: black">{{ $orderItem->id }}</button></a>
                                  </td>
                                  <td>{{ \Carbon\Carbon::parse($orderItem->created_at)->format('d M, Y') }}</td>
                                  <td>

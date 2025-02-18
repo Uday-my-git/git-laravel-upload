@@ -17,6 +17,7 @@ class AdminRedirectIfAuthenticated
     */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
+        // if user already logged in, go to the dashboard page directely
         if (Auth::guard('admin')->check()) {
             return redirect()->route('admin.dashboard');
         }
