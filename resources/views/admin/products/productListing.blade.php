@@ -41,7 +41,7 @@
             <table class="table table-hover table-sm text-nowrap">
                <thead>
                   <tr>
-                     <th width="60">ID</th>
+                     <th width="80">ID</th>
                      <th width="80"></th>
                      <th>Title</th>
                      <th>Slug</th>
@@ -63,9 +63,9 @@
                            <td>{{ $productList->id }}</td>
                            <td>
                               @if (!empty($productImage->image))
-                                 <img src="{{ asset('uploads/product/small/'.$productImage->image) }}" class="img-thumbnail">
+                                 <img src="{{ asset('uploads/product/small/'.$productImage->image) }}" width="50">
                               @else 
-                                 <img src="{{ asset('uploads/dummy-img.jpg') }}" class="img-thumbnail">
+                                 <img src="{{ asset('uploads/dummy-img.jpg') }}" width="50">
                               @endif
                            </td>
                            <td>{{ $productList->title }}</td>

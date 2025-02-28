@@ -13,11 +13,11 @@ use App\Http\Controllers\admin\ProductSubCategoryController;
 use App\Http\Controllers\admin\ShippingController;
 use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\admin\DiscountCodeController;
 
 // front end of prodcut listing
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FrontController;
-use App\Http\Controllers\DiscountCodeController;
 use App\Http\Controllers\ShopController;
 
 // front end of Add to Cart Prodcut
@@ -120,7 +120,7 @@ Route::group(['prefix' => 'admin'], function() {
         Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
         Route::delete('/product/{id}', [ProductController::class, 'deleteProduct'])->name('product.delete');
         Route::get('/product/getProducts', [ProductController::class, 'getRelatedProducts'])->name('product.getRelatedProducts');
-        
+            
         /**************************** Product SubCategory Route Define ****************************/
         Route::get('/product-subCategory', [ProductSubCategoryController::class, 'index'])->name('product.subCategory');
         

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CustomerAddress;
 use App\Models\Country;
@@ -39,7 +40,7 @@ class AuthController extends Controller
             $user->name = $request->name;
             $user->email = $request->email;
             $user->phone = $request->phone;
-            $user->password = $request->password;
+            $user->password = Hash::make($request->password);
             $user->save();
             
             session()->flash('success', 'User Register Successfully, Now Login Your Account');
@@ -166,6 +167,7 @@ class AuthController extends Controller
 
     public function orders() 
     {
+        $data = [];
         $user = Auth::user();
         
         $orders = Order::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
@@ -196,9 +198,8 @@ class AuthController extends Controller
         $user = Auth::user();
 
         $wishlist = Wishlist::where('user_id', $user->id)->with('product')->get(); 
-        $data['wishlist'] = $wishlist;
 
-        return view('front.account.wishlist', $data);
+        return view('front.account.wishlist', compact('wishlist'));
     }
 
     public function removeWishlist(Request $request) 

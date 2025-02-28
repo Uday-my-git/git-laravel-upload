@@ -36,9 +36,13 @@
                                  @endphp
 
                                  @if (!empty($productImg))
-                                    <a href="{{ route('front.product', $wishlistItem->product->slug) }}" class="d-block flex-shrink-0 mx-auto me-sm-4" style="width: 10rem;"><img src="{{ asset('/uploads/product/large/' . $productImg->image) }}" alt="Product"></a>
+                                    <a href="{{ route('front.product', $wishlistItem->product->slug) }}" class="d-block flex-shrink-0 mx-auto me-sm-4" style="width: 10rem;">
+                                       <img src="{{ asset('/uploads/product/large/' . $productImg->image) }}" alt="Product">
+                                    </a>
                                  @else
-                                    <a href="#" class="d-block flex-shrink-0 mx-auto me-sm-4" style="width: 10rem;"><img src="{{ asset('/uploads/dummy-img.jpg') }}" alt="Product"></a>  
+                                    <a href="#" class="d-block flex-shrink-0 mx-auto me-sm-4" style="width: 10rem;">
+                                       <img src="{{ asset('/uploads/dummy-img.jpg') }}" alt="Product">
+                                    </a>  
                                  @endif
                                  
                                  <div class="pt-2">

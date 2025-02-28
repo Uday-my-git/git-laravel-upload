@@ -90,7 +90,7 @@
                         <ul class="dropdown-menu dropdown-menu-dark">
                            @if ($category->sub_category->isNotEmpty())
                               @foreach ($category->sub_category as $subCategory)
-                                 <li><a class="dropdown-item nav-link" href="3">{{ $subCategory->name }}</a></li>
+                                 <li><a href="{{ route('front.shop', [$category->slug, $subCategory->slug]) }}" class="dropdown-item nav-link">{{ $subCategory->name }}</a></li>
                               @endforeach
                            @endif                          
                         </ul>
@@ -184,14 +184,14 @@
       <div class="modal-content">
          <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                <span aria-hidden="true">&times;</span>
             </button>
          </div>
          <div class="modal-body">
          </div>
          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
          </div>
       </div>
    </div>

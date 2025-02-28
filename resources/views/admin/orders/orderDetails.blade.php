@@ -86,8 +86,8 @@
                               <th colspan="3" class="text-right">Discount: {{ (!empty($order->coupon_code)) ? '('.$order->coupon_code.')' : ''}}</th>
                               <td>- ${{ number_format($order->discount, 2) }}</td>
                            </tr>
-                           <tr>
-                              <th colspan="3" class="text-right">Grand Total:</th>
+                           <tr style="color: rgb(176, 14, 14)">
+                              <th colspan="3" class="text-right" >Grand Total:</th>
                               <td>${{ number_format($order->grand_total, 2) }}</td>
                            </tr>    
                         @endif                        
@@ -170,7 +170,7 @@ $(function () {
      
    });
 
-   $("#send-email-invoice-btn").click(function (e) {    // send email button .click event of j.s, Type: 1
+   $("#send-email-invoice-btn").click(function (e) {    // Type: 1
       e.preventDefault(); 
 
       if (confirm('Are u send email ??')) {
@@ -199,7 +199,7 @@ $(function () {
    });
 
  
-   // $("#send-email-invoice_old").submit(function (e) {     // send email .submit event of j.s, Type: 2
+   // $("#send-email-invoice_old").submit(function (e) {     // Type: 2
    //    e.preventDefault();
      
    //    if (confirm('Are u send email ??')) {

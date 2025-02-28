@@ -17,8 +17,8 @@ class ShippingController extends Controller
         $data['countries'] = $countries;
       
         $shipping = Shipping::select('shipping_charges.*', 'countries.name as cName')
-                    ->leftJoin('countries', 'countries.id', '=', 'shipping_charges.country_id')
-                    ->simplePaginate(5);
+                        ->leftJoin('countries', 'countries.id', '=', 'shipping_charges.country_id')
+                        ->simplePaginate(5);
         
         $data['shipping'] = $shipping;
         return view('admin.shipping.create', $data);

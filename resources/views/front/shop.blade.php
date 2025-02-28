@@ -36,7 +36,7 @@
                                  <a href="{{ route('front.shop', $category->slug) }}" class="nav-item nav-link {{ ($categorySelected == $category->id) ? 'text-primary' : ''}}"> {{ $category->name }} </a>
                               @endif
 
-                              @if ($category->sub_category->isNotEmpty())
+                              @if ($category->sub_category->isNotEmpty())  
                                  <div id="collapseOne-{{ $key }}" class="accordion-collapse collapse {{ ($categorySelected == $category->id) ? 'show' : ''}}" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
                                     <div class="accordion-body">
                                        <div class="navbar-nav">
@@ -100,7 +100,7 @@
                         <div class="card product-card">
                            <div class="product-image position-relative">
                               @if (!empty($productImage->image))
-                                 <a href="" class="product-img">
+                                 <a href="{{ route('front.product', $product->slug) }}" class="product-img">
                                     <img class="card-img-top" src="{{ asset('uploads/product/small/'. $productImage->image) }}" alt="">
                                  </a>
                               @else
@@ -177,7 +177,7 @@ $(function () {
       },
    });
 
-   var slider = $(".js-range-slider").data("ionRangeSlider");
+   var slider = $(".js-range-slider").data("ionRangeSlider"); 
 
    $(".brand-lebel").change(function() {
       apply_filters();
@@ -212,7 +212,7 @@ $(function () {
          url += "&search="+keyWord;
       }
 
-      url += "&sort="+$("#sort").val();                                        // apply sort filter
+      url += "&sort="+$("#sort").val();      // apply sort filter
 
       window.location.href = url;
    }

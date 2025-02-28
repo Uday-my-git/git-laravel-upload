@@ -90,7 +90,7 @@
                </ul>
                <div class="tab-content" id="myTabContent">
                   <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
-                     {!! $product->short_description !!}
+                     {!! $product->short_description !!} 
                   </div>
                   <div class="tab-pane fade" id="shipping" role="tabpanel" aria-labelledby="shipping-tab">
                      {!! $product->shipping_returns !!}

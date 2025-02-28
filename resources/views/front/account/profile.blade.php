@@ -305,11 +305,11 @@ $(function () {
             } else {
                var errors = response.errors;
 
-               $.each(errors, function(key, value) {
-                  console.log(key);
+               // $.each(errors, function(key, value) {
+               //    console.log(key);
                   
-                  // $(`#${key}`).addClass("is-invalid").siblings("p").addClass("invalid-feedback").html(value[0]);
-               });
+               //    $(`#${key}`).addClass("is-invalid").siblings("p").addClass("invalid-feedback").html(value[0]);
+               // });
 
                if (errors.first_name) {
                   $("#first_name").addClass('is-invalid').siblings('p').addClass('invalid-feedback').html(errors.first_name);

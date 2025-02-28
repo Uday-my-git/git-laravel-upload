@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Wishlist extends Model
 {
     use HasFactory;
+    
     public $fillable = ['user_id', 'product_id'];
 
     public function product()

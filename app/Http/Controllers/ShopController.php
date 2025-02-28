@@ -23,7 +23,7 @@ class ShopController extends Controller
 
         // $products = Product::orderBy('id', 'asc')->where('status', 1)->get();
         
-        // apply or listing sub-category of product filter
+        // apply filter or listing sub-category of product 
         $products = Product::where('status', 1);
         
         if (!empty($categorySlug)) {                             //listing sub-category of selected category
@@ -40,7 +40,7 @@ class ShopController extends Controller
 
         $brandsArr = [];
 
-        if (!empty($request->get('brands'))) {                                      // listing filter brands checkboxes
+        if (!empty($request->get('brands'))) {                          // listing filter brands checkboxes
             $brandsArr = explode(',', $request->get('brands'));
             $products = $products->whereIn('brand_id', $brandsArr);
         }
@@ -79,6 +79,7 @@ class ShopController extends Controller
         $data["subCategorySelected"] = $subCategorySelected;
         $data["brandsArr"] = $brandsArr;
 
+        // $data["priceMax"] = intval($request->get('price_max'));
         $data["priceMax"] = (intval($request->get('price_max')) == 0) ? 1000 : (intval($request->get('price_max')));
         $data["priceMin"] = intval($request->get('price_min'));
         $data["sort"] = $request->get('sort');
@@ -92,6 +93,8 @@ class ShopController extends Controller
 
         $relatedProducts = '';         // Default empty collection
         // $relatedProducts = collect();         // Default empty collection
+
+        if ($product == null) abort(404);
 
         if (!empty($product->related_products)) {
             $productArr = explode(',', $product->related_products);

@@ -13,7 +13,7 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $data = Order::orderBy('orders.created_at', 'desc')
+        $data = Order::latest('orders.created_at')
                     ->select('orders.*', 'users.name', 'users.email')
                     ->leftjoin('users', 'users.id', '=', 'orders.user_id');
 
@@ -45,7 +45,7 @@ class OrderController extends Controller
     {
         $data = Order::where('orders.id', $orderId)
                     ->select('orders.*', 'countries.name as countryName')
-                    ->join('countries', 'orders.country_id', '=', 'countries.id')
+                    ->leftjoin('countries', 'orders.country_id', '=', 'countries.id')
                     ->first();
 
         $orderItem = OrderItem::where('order_id', $orderId)->get();

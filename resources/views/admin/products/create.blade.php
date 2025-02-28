@@ -1,4 +1,5 @@
-@extends('admin.layouts.app') @section('content') <section class="content-header">
+@extends('admin.layouts.app') 
+@section('content') <section class="content-header">
    <div class="container-fluid my-2">
       <div class="row mb-2">
          <div class="col-sm-6">
@@ -9,8 +10,8 @@
          </div>
       </div>
    </div>
-   <!-- /.container-fluid -->
 </section>
+
 <section class="content">
    <form action="" name="productForm" id="createProductForm" method="POST">
       <div class="container-fluid">

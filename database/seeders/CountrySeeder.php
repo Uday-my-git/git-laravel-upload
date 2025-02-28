@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\DB;
 
 class CountrySeeder extends Seeder
 {
-    /**
+	/**
      * Run the database seeds.
-     */
-    public function run(): void
-    {
-        $countries = array(
+	*/
+	public function run(): void
+	{
+		$countries = array(
 			array('code' => 'US', 'name' => 'United States'),
 			array('code' => 'CA', 'name' => 'Canada'),
 			array('code' => 'AF', 'name' => 'Afghanistan'),
@@ -259,5 +259,5 @@ class CountrySeeder extends Seeder
 		);
 
 		DB::table('countries')->insert($countries);
-    }
+	}
 }

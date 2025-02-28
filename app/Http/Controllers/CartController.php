@@ -39,7 +39,7 @@ class CartController extends Controller
                 Cart::add($product->id, $product->title, 1, $product->price, ['productImage' => (!empty($product->productImage->first())) ? $product->productImage->first() : '']);
 
                 $status = true;
-                $msg = $product->title . ' Added in cart';
+                $msg = $product->title . ' Added In Your Cart123';
             } else {
                 $status = false;
                 $msg = $product->title . ' Product already added in Cart';
@@ -56,6 +56,7 @@ class CartController extends Controller
     public function cart()
     {
         $cartItem = Cart::content();
+        // dd($cartItem);
         $data['cartItem'] = $cartItem;
 
         return view('front.cart', $data);
@@ -66,7 +67,7 @@ class CartController extends Controller
         if (isset($request->rowId)) {
             $rowId = $request->rowId;
             $qty = $request->qty;
-    
+            
             $productStockQty = Cart::get($rowId);
             $product = Product::find($productStockQty->id);
     
@@ -142,9 +143,9 @@ class CartController extends Controller
         
         $countreisFetch = Country::orderBy('name', 'asc')->get();
         $customerAddress = CustomerAddress::where('user_id', Auth::user()->id)->first(); 
+
         $data['countreisFetch'] = $countreisFetch;
         $data['customerAddress'] = $customerAddress;
-        // dd($userCountry);
         
         if ($customerAddress != '') {    // calculate shipping charges according country
             $userCountry = $customerAddress->country_id;     
@@ -155,7 +156,7 @@ class CartController extends Controller
             $totalShippingCharges = 0;
             
             foreach (Cart::content() as $cartItems) {
-                $totalQty = $totalQty + $cartItems->qty;
+                $totalQty += $cartItems->qty;
             }
     
             $totalShippingCharges = $totalQty * $shippingCharges->amount;
@@ -191,7 +192,7 @@ class CartController extends Controller
                 $totalQty += $cartItem->qty;
             }
 
-            if (session()->has('coupon_code')) { // apply coupon code
+            if (session()->has('coupon_code')) {    // apply coupon code calculation
                 $couponCode = session()->get('coupon_code');
 
                 if ($couponCode->type == 'percent') {
@@ -200,7 +201,7 @@ class CartController extends Controller
                     $discountCoupon = $couponCode->discount_amount;
                 }
                 
-                /***************** show coupon code when new coupon code apply *****************/
+                /*********** show coupon code when new coupon code apply wihout page reload ***********/
                 $couponHtml = '<div class="mt-4" id="remove-coupon-response">
                     <strong>'. session()->get('coupon_code')->coupon_code .'</strong>      
                     <a class="btn btn-danger" id="remove-coupon-code"><i class="fa fa-times"></i></a>
@@ -211,22 +212,19 @@ class CartController extends Controller
             }
             
             if ($shipping != null) {
-                $shippingCharge = $totalQty * $shipping->amount;                
+                $shippingCharge = $totalQty * $shipping->amount;   
                 $grandTotal = $shippingCharge + ($subTotal - $discountCoupon);
-
-                $data['shippingCharge'] = number_format($shippingCharge, 2);
-                $data['grandTotal'] = number_format($grandTotal, 2);
+                
             } else {
                 $shipping = Shipping::where('country_id', 'rest_of_world')->first();
-                // dd($shipping);
 
                 $shippingCharge = $totalQty * $shipping->amount;
                 $grandTotal = $shippingCharge + ($subTotal - $discountCoupon);
-
-                $data['shippingCharge'] = number_format($shippingCharge, 2);
-                $data['grandTotal'] = number_format($grandTotal, 2);
             }
 
+            $data['shippingCharge'] = number_format($shippingCharge, 2);
+            $data['grandTotal'] = number_format($grandTotal, 2);
+            
             return response()->json(['status' => true, 'data' => $data]);
         } else {
             $shippingCharge = 0;
@@ -302,7 +300,7 @@ class CartController extends Controller
                     $totalQty += $cartItem->qty;
                 }
 
-                if ($shipping !== null) {    
+                if ($shipping != null) {    
                     $shippingCharge = $totalQty * $shipping->amount; 
                     $grandTotal = $shippingCharge + ($subTotal - $discountCoupon);
                 } else {

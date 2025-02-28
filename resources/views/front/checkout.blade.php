@@ -147,7 +147,7 @@
                   <h3 class="card-title h5 mb-3">Payment Methods:-</h3>
                   <div>
                      <input type="radio" name="payment_method" id="payment-method-one" value="cod" checked>
-                     <label for="payment_method" class="form-check-label">COD</label>
+                     <label for="payment_method_one" class="form-check-label">COD</label>
                   </div>
                   <div>
                      <input type="radio" name="payment_method" id="payment-method-two" value="stripe">
@@ -331,6 +331,7 @@ $(function () {
                   $("#discountCoupon").html('$'+ response.data.discountCoupon);
                   $("#grand-total").html('$'+ response.data.grandTotal);
                   $("#remove-coupon-response").html("");
+                  $("#couponCode").val("");     
                } 
             }
          });

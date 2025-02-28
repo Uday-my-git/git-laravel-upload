@@ -132,7 +132,7 @@ $(function () {
       format:'Y-m-d H:i:s',
    });
 
-   
+         
    $("#discount_form").submit(function (event) {
       event.preventDefault();
 
