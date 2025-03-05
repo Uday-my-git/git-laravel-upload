@@ -372,51 +372,55 @@ class CartController extends Controller
     public function applyCouponCode(Request $request)
     {
         $couponCode = DiscountCoupon::where('coupon_code', $request->couponCode)->first();
-        
+
         if ($couponCode == null) {
             return response()->json(['status' => false, 'msg' => 'not valid coupon code value']);
         }
 
-        $now = Carbon::now();
+        if ($couponCode->status == 1 && $couponCode->status != 0) {
+            $now = Carbon::now();
 
-        if ($couponCode->starts_at != '') {
-            $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $couponCode->starts_at);
+            if ($couponCode->starts_at != '') {
+                $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $couponCode->starts_at);
 
-            if ($now->lt($startDate)) {
-                return response()->json(['status' => false, 'msg' => 'start date not greter then current date & time']);
+                if ($now->lt($startDate)) {
+                    return response()->json(['status' => false, 'msg' => 'start date not greter then current date & time']);
+                }
             }
-        }
 
-        if ($couponCode->expires_at != '') {
-            $endDate = Carbon::createFromFormat('Y-m-d H:i:s', $couponCode->expires_at);
+            if ($couponCode->expires_at != '') {
+                $endDate = Carbon::createFromFormat('Y-m-d H:i:s', $couponCode->expires_at);
 
-            if ($now->gt($endDate)) {
-                return response()->json(['status' => false, 'msg' => 'start date not greter then Expires date & time']);
+                if ($now->gt($endDate)) {
+                    return response()->json(['status' => false, 'msg' => 'start date not greter then Expires date & time']);
+                }
             }
-        }
 
-        if ($couponCode->max_uses > 0) {    // check maximum number of used this coupon code
-            $couponUsed = Order::where('coupon_code_id', $couponCode->id)->count();
+            if ($couponCode->max_uses > 0) {    // check maximum number of used this coupon code
+                $couponUsed = Order::where('coupon_code_id', $couponCode->id)->count();
 
-            if ($couponUsed >= $couponCode->max_uses) {
-                return response()->json(['status' => false, 'msg' => 'max limit used this coupon code']);
+                if ($couponUsed >= $couponCode->max_uses) {
+                    return response()->json(['status' => false, 'msg' => 'max limit used this coupon code']);
+                }
             }
-        }
 
-        if ($couponCode->max_uses_user > 0) {    // check maximum number of user used this coupon code
-            $maxUserUsed = Order::where(['coupon_code_id' => $couponCode->id, 'user_id' => Auth::user()->id])->count();
+            if ($couponCode->max_uses_user > 0) {    // check maximum number of user used this coupon code
+                $maxUserUsed = Order::where(['coupon_code_id' => $couponCode->id, 'user_id' => Auth::user()->id])->count();
 
-            if ($maxUserUsed >= $couponCode->max_uses_user) {
-                return response()->json(['status' => false, 'msg' => 'max number of user used this coupon code']);
+                if ($maxUserUsed >= $couponCode->max_uses_user) {
+                    return response()->json(['status' => false, 'msg' => 'max number of user used this coupon code']);
+                }
             }
-        }
 
-        if ($couponCode->min_amount > 0) {     // check minimum amount of product price
-            $subTotal = Cart::subtotal(2, '.', '');
-            
-            if ($subTotal < $couponCode->min_amount) {
-                return response()->json(['status' => false, 'msg' => 'your minimum amount must be $' . $couponCode->min_amount]);
+            if ($couponCode->min_amount > 0) {     // check minimum amount of product price
+                $subTotal = Cart::subtotal(2, '.', '');
+                
+                if ($subTotal < $couponCode->min_amount) {
+                    return response()->json(['status' => false, 'msg' => 'your minimum amount must be $' . $couponCode->min_amount]);
+                }
             }
+        } else {
+            return response()->json(['status' => false, 'msg' => 'coupon code is de-activated']);
         }
 
         session()->put('coupon_code', $couponCode);

@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Page;
+use App\Models\User;
 use App\Models\Wishlist;
+use App\Mail\ContactUsEmail;
+use Illuminate\Support\Facades\Mail;
 
 class FrontController extends Controller
 {
@@ -52,5 +56,40 @@ class FrontController extends Controller
         return response()->json(['status' => true, 'msg' => '<div class="alert alert-success"><strong>'.$product->title.'</strong> added in wishlist</div>']);
     }
 
+    public function page($slug) 
+    {
+        $page = Page::where('slug', $slug)->first();
+
+        if (is_null($page)) abort(404); 
+        
+        return view('front.page', ['page' => $page]);
+    }
+
+    public function sendContactUsEmail(Request $request) 
+    {
+        $validatedData = $request->validate([
+            'name' => ['required'],
+            'email' => ['required'],
+            'subject' => ['required'],
+            'message' => ['required', 'min:20'],
+        ]);
+
+        if ($validatedData) {
+            $mailData = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'subject' => $request->subject,
+                'message' => $request->message,
+            ];
+
+            $admin = User::where('id', 1)->first();
+
+            Mail::to($admin->email)->send(new ContactUsEmail($mailData));
+
+            return redirect()->back()->with('success', 'Your contact detail send admin to successfully');
+        } else {
+            
+        }
+    }
 
 }

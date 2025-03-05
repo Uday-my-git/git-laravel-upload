@@ -21,7 +21,7 @@
          <div class="col-md-9">
             <div class="card">
                <div class="card-header">
-                  <h2 class="h5 mb-0 pt-2 pb-2">My Orders</h2>
+                  <h2 class="h5 mb-0 pt-2 pb-2">Orders Details</h2>
                </div>
                <div class="card-body pb-0">
                   <!-- Info -->
@@ -65,11 +65,8 @@
                   </div>
                </div>
                <div class="card-footer p-3">
-                  <!-- Heading -->
                   <h6 class="mb-7 h5 mt-4">Order Items ({{$orderItemCount}})</h6>
-                  <!-- Divider -->
                   <hr class="my-3">
-                  <!-- List group -->
                   <ul>
                      @if ($orderItem->isNotEmpty())
                         @foreach ($orderItem as $orderDetails)

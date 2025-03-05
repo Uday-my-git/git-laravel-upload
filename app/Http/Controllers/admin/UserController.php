@@ -25,7 +25,7 @@ class UserController extends Controller
         return view('admin.user.userListing', compact('user'));
     }
     
-    public function create()
+    public function userCreate()
     {
         return view('admin.user.userCreate');
     }

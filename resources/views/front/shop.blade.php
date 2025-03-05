@@ -209,7 +209,7 @@ $(function () {
       console.log(keyWord);
       
       if (keyWord.length > 0) {
-         url += "&search="+keyWord;
+         url += "&search="+keyWord; 
       }
 
       url += "&sort="+$("#sort").val();      // apply sort filter

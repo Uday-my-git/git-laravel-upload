@@ -117,7 +117,7 @@
                   @endphp
                   <div class="card product-card">
                      <div class="product-image position-relative">
-                        <a href="" class="product-img">
+                        <a href="{{ route('front.product', $relatedProductItem->slug) }}" class="product-img">
                            @if (!empty($productImages->image))                           
                               <img class="card-img-top" src="{{ asset('/uploads/product/small/' . $productImages->image) }}" alt="">
                            @else
@@ -146,7 +146,7 @@
                         </div>
                      </div>
                      <div class="card-body text-center mt-3">
-                        <a class="h6 link" href="">{{ $relatedProductItem->title }}</a>
+                        <a class="h6 link" href="{{ route('front.product', $relatedProductItem->slug) }}">{{ $relatedProductItem->title }}</a>
                         <div class="price mt-2">
                            <span class="h5">
                               <strong>${{ $relatedProductItem->price }}</strong>

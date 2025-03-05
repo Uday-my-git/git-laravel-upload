@@ -81,7 +81,7 @@ function removeWishlistFun(product_id)
       $.ajax({
          type: "POST",
          url: "{{ route('account.removeWishlist') }}",
-         data: {product_id:product_id},
+         data: "product_id="+product_id,
          dataType: "JSON",
          success: function (response) {
             if (response.status === true) {

@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\CategorieController;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImagesController;
+use App\Http\Controllers\admin\PageController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ProductImageController;
 use App\Http\Controllers\admin\ProductSubCategoryController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\admin\ShippingController;
 use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\DiscountCodeController;
+use App\Http\Controllers\admin\SettingController;
 
 // front end of prodcut listing
 use App\Http\Controllers\AuthController;
@@ -33,12 +35,20 @@ use Illuminate\Http\Request;
 
 Route::get('/', [FrontController::class, 'index'])->name('front.home');
 Route::post('/add-to-wishlist', [FrontController::class, 'addToWishlist'])->name('front.addToWishlist');
+Route::get('/page/{slug}', [FrontController::class, 'page'])->name('front.page');
+Route::post('/send-contact-us-email', [FrontController::class, 'sendContactUsEmail'])->name('front.sendContactUsEmail');
 
+/********************************* Add ShopController Route *********************************/ 
 Route::get('/shop/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
 Route::get('/product/{slug}', [ShopController::class, 'product'])->name('front.product');
 
-/**************************** Add to Cart Prodcut Front End Side ****************************/
+/**************************** Forgot Password Route ****************************/
+Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('front.forgotPassword');
+Route::post('/process-forgot-password', [AuthController::class, 'processForgotPassword'])->name('front.processForgotPassword');
+Route::get('/process-reset-password/{token}', [AuthController::class, 'resetPasswordAccount'])->name('front.resetPasswordAccount');
+Route::post('/process-reset-password-account', [AuthController::class, 'processResetPasswordAccount'])->name('front.processResetPasswordAccount');
 
+/**************************** Add to Cart Prodcut Front End Side ****************************/
 Route::get('/cart', [CartController::class, 'cart'])->name('front.cart');
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('front.addToCart');
 Route::post('/update-cart', [CartController::class, 'updateCart'])->name('front.updateCart');
@@ -58,7 +68,6 @@ Route::group(['prefix' => 'account'], function () {
         Route::get('/login', [AuthController::class, 'login'])->name('account.login');
         Route::post('/login-authenticate', [AuthController::class, 'authenticate'])->name('account.authenticate');
         Route::post('/save-register-form', [AuthController::class, 'saveRegisterForm'])->name('account.saveRegisterForm');
-        
     });
 
     Route::group(['middleware' => 'auth'], function () {
@@ -70,6 +79,8 @@ Route::group(['prefix' => 'account'], function () {
         Route::get('/wishlist', [AuthController::class, 'wishlist'])->name('account.wishlist');
         Route::post('/remove-wishlist', [AuthController::class, 'removeWishlist'])->name('account.removeWishlist');
         Route::get('/logout', [AuthController::class, 'logout'])->name('account.logout');
+        Route::get('/change-password-form', [AuthController::class, 'changePasswordForm'])->name('account.changePasswordForm');
+        Route::post('/change-password', [AuthController::class, 'changePassword'])->name('account.changePassword');
 
     });
 });
@@ -150,12 +161,24 @@ Route::group(['prefix' => 'admin'], function() {
         Route::post('send-email-invoice/{orderId}', [OrderController::class, 'sendInvoiceEmail'])->name('orders.sendInvoiceEmail');
         
         /**************************** User Route Define  ****************************/
-        Route::get('index', [UserController::class, 'index'])->name('user.index');
-        Route::get('create', [UserController::class, 'create'])->name('user.userCreate');
+        Route::get('user-list', [UserController::class, 'index'])->name('user.index');
+        Route::get('create', [UserController::class, 'userCreate'])->name('user.userCreate');
         Route::post('save', [UserController::class, 'save'])->name('user.save');
         Route::get('user-edit/{id}', [UserController::class, 'edit'])->name('user.userEdit');
         Route::put('user-update/{id}', [UserController::class, 'update'])->name('user.userupdate');
         Route::delete('user-delete/{id}', [UserController::class, 'remove'])->name('user.remove');
+
+        /**************************** Pages Route Define  ****************************/
+        Route::get('pages-list', [PageController::class, 'index'])->name('pages.listPage');
+        Route::get('create-new', [PageController::class, 'create'])->name('pages.createPage');
+        Route::post('pages-store', [PageController::class, 'store'])->name('pages.store');
+        Route::get('pages-edit/{id}', [PageController::class, 'edit'])->name('pages.edit');
+        Route::put('pages-update/{id}', [PageController::class, 'update'])->name('pages.update');
+        Route::delete('pages-delete/{id}', [PageController::class, 'delete'])->name('pages.delete');
+
+        /**************************** Pages Route Define  ****************************/
+        Route::get('chage-password-form', [SettingController::class, 'chagePasswordForm'])->name('admin.chagePasswordForm');
+        Route::post('chage-password', [SettingController::class, 'chagePassword'])->name('admin.chagePassword');
 
         /**************************** Temp-images Route Define ****************************/
         Route::post('/upload-temp-images', [TempImagesController::class, 'create'])->name('temp-images.create');

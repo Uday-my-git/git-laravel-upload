@@ -58,7 +58,7 @@
             </li>
             <li class="nav-item">
                <a href="{{ route('coupons.list') }}" class="nav-link">
-                  <i class="nav-icon  fa fa-percent" aria-hidden="true"></i>
+                  <i class="nav-icon fa fa-percent" aria-hidden="true"></i>
                   <p>Discount</p>
                </a>
             </li>
@@ -69,7 +69,7 @@
                </a>
             </li>
             <li class="nav-item">
-               <a href="pages.html" class="nav-link">
+               <a href="{{ route('pages.listPage') }}" class="nav-link">
                   <i class="nav-icon  far fa-file-alt"></i>
                   <p>Pages</p>
                </a>
