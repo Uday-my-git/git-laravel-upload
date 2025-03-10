@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductRating;
 use App\Models\SubCategoryModel;
+use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Http\Request;
 
@@ -89,10 +91,13 @@ class ShopController extends Controller
 
     public function product($slug)
     {
-        $product = Product::where('slug', $slug)->with('productImage')->firstOrFail();
-
-        $relatedProducts = '';         // Default empty collection
-        // $relatedProducts = collect();         // Default empty collection
+        $product = Product::where('slug', $slug)
+                    ->withCount('productRatingFun')
+                    ->withSum('productRatingFun', 'rating')
+                    ->with(['productImage', 'productRatingFun'])->firstOrFail();
+                    
+        $relatedProducts = '';        
+        // $relatedProducts = collect();    // Default empty collection
 
         if ($product == null) abort(404);
 
@@ -101,12 +106,54 @@ class ShopController extends Controller
             $relatedProducts = Product::whereIn('id', $productArr)->where('status', 1)->get();
         }
 
+        $avgRating = '0.00';  // Rating Show
+        $avgRatingPer = 0;
+
+        if ($product->product_rating_fun_count > 0) {
+            $avgRating = number_format(($product->product_rating_fun_sum_rating / $product->product_rating_fun_count), 2);
+            $avgRatingPer = ($avgRating * 100) / 5;
+        }
+        
         return view('front.product', [
             'product' => $product,
+            'avgRating' => $avgRating,
+            'avgRatingPer' => $avgRatingPer,
             'relatedProducts' => $relatedProducts
         ]);
     }
 
-   
+    public function userRating(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'username' => 'required',
+            'email' => 'required|email',
+            'rating' => 'required',
+            'comment' => 'required',
+        ]);
+ 
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()]);
+        } else {
+            $counEmail = ProductRating::where('email', $request->email)->count();
+
+            if ($counEmail > 0) {
+                session()->flash('error', 'duplicate rating not allows');
+                return response()->json(['status' => true, 'msg' => 'duplicate rating not allows']);
+            } else {
+                $productRating = new ProductRating;
+
+                $productRating['product_id'] = $id;
+                $productRating['username'] = $request->username;
+                $productRating['email'] = $request->email;
+                $productRating['rating'] = $request->rating;
+                $productRating['comment'] = $request->comment;
+                $productRating['status'] = 0;
+                $productRating->save();
+    
+                session()->flash('success', 'Thanks for your ratings');
+                return response()->json(['status' => true, 'msg' => 'thanks for your ratings']);
+            }  
+        }
+    }
     
 }

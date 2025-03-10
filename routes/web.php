@@ -31,24 +31,25 @@ use Illuminate\Http\Request;
 //     orderEmail(132);
 // });
 
-/********************************* Add To Wishlist *********************************/ 
+/****************************** Add To Wishlist ******************************/ 
 
 Route::get('/', [FrontController::class, 'index'])->name('front.home');
 Route::post('/add-to-wishlist', [FrontController::class, 'addToWishlist'])->name('front.addToWishlist');
 Route::get('/page/{slug}', [FrontController::class, 'page'])->name('front.page');
 Route::post('/send-contact-us-email', [FrontController::class, 'sendContactUsEmail'])->name('front.sendContactUsEmail');
 
-/********************************* Add ShopController Route *********************************/ 
+/***************************** Add ShopController Route ***********************/ 
 Route::get('/shop/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
 Route::get('/product/{slug}', [ShopController::class, 'product'])->name('front.product');
+Route::post('/user-rating/{id}', [ShopController::class, 'userRating'])->name('front.userRating');
 
-/**************************** Forgot Password Route ****************************/
+/**************************** Forgot Password Route *************************/
 Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('front.forgotPassword');
 Route::post('/process-forgot-password', [AuthController::class, 'processForgotPassword'])->name('front.processForgotPassword');
 Route::get('/process-reset-password/{token}', [AuthController::class, 'resetPasswordAccount'])->name('front.resetPasswordAccount');
 Route::post('/process-reset-password-account', [AuthController::class, 'processResetPasswordAccount'])->name('front.processResetPasswordAccount');
 
-/**************************** Add to Cart Prodcut Front End Side ****************************/
+/**************************** Add to Cart Prodcut Front End Side **************/
 Route::get('/cart', [CartController::class, 'cart'])->name('front.cart');
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('front.addToCart');
 Route::post('/update-cart', [CartController::class, 'updateCart'])->name('front.updateCart');
@@ -60,8 +61,7 @@ Route::post('/apply-discount-coupon', [CartController::class, 'applyCouponCode']
 Route::post('/remove-discount-coupon', [CartController::class, 'removeCouponCode'])->name('front.removeCouponCode');
 Route::get('/thank-you-page/{orderId}', [CartController::class, 'thankyouPage'])->name('front.thankyouPage');
 
-/**************************** Rront-end User Login & Signup ****************************/ 
-
+/**************************** Rront-end User Login & Signup ******************/ 
 Route::group(['prefix' => 'account'], function () { 
     Route::group(['middleware' => 'guest'], function () {
         Route::get('/register', [AuthController::class, 'register'])->name('account.register');
@@ -86,7 +86,6 @@ Route::group(['prefix' => 'account'], function () {
 });
 
 /**************************** Admin Route Define ****************************/
-
 Route::group(['prefix' => 'admin'], function() {
     Route::group(['middleware' => 'admin.guest'], function() {
         Route::get('/login', [AdminLoginController::class, 'index'])->name('admin.login');
