@@ -5,6 +5,8 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TempImage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 use Image;
 
 class TempImagesController extends Controller
@@ -21,12 +23,15 @@ class TempImagesController extends Controller
 
             $image->move(public_path() . '/temp-img', $newName);
 
-            // create thumbnail
-            $sourcePath = public_path() . '/temp-img/' . $newName;
-            $destinationPath = public_path() . '/temp-img/thumb/' . $newName;
+           // Generate Image Thumbnail
+            $srcPath = public_path() . '/temp/' . $newName;
+            $destiNationPath = public_path() . '/temp/thumb/' . $newName;
 
-            $image = Image::make($sourcePath)->fit(300, 275)->save($destinationPath);
-
+            $manager = new ImageManager(Driver::class);
+            $image = $manager->read($srcPath);
+            $image->cover(300, 275);
+            $image->save($destiNationPath);
+            
             return response()->json(['status' => true, 'img_id' => $tempImg->id, 'img_path' => asset('/temp-img/thumb/' . $newName), 'msg' => 'image uploaded successfully']);
         }
     }
